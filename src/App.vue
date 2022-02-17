@@ -160,16 +160,28 @@ export default {
       graph: [],
       page: 1,
       filter: "",
-      hasNextPage: "",
+      hasNextPage: ""
     };
   },
 
   created() {
-    const tickersData = localStorage.getItem('cryptonomicon-list');
+    const windowData = Object.fromEntries(
+      new URL(window.location).searchParams.entries()
+    );
+
+    if (windowData.filter) {
+      this.filter = windowData.filter;
+    }
+
+    if (windowData.page) {
+      this.page = windowData.page;
+    }
+
+    const tickersData = localStorage.getItem("cryptonomicon-list");
 
     if (tickersData) {
       this.tickers = JSON.parse(tickersData);
-      this.tickers.forEach(ticker => this.subscribeToUpdates(ticker.name))
+      this.tickers.forEach(ticker => this.subscribeToUpdates(ticker.name));
     }
   },
 
@@ -178,7 +190,9 @@ export default {
       const start = (this.page - 1) * 6;
       const end = this.page * 6;
 
-      const filteredTickers = this.tickers.filter(tiker => tiker.name.includes(this.filter));
+      const filteredTickers = this.tickers.filter(tiker =>
+        tiker.name.includes(this.filter)
+      );
 
       this.hasNextPage = filteredTickers.length > end;
 
@@ -210,9 +224,9 @@ export default {
       };
 
       this.tickers.push(currentTicker);
-      this.filter = '';
+      this.filter = "";
 
-      localStorage.setItem('cryptonomicon-list', JSON.stringify(this.tickers));
+      localStorage.setItem("cryptonomicon-list", JSON.stringify(this.tickers));
       this.subscribeToUpdates(currentTicker.name);
     },
 
@@ -237,6 +251,19 @@ export default {
   watch: {
     filter() {
       this.page = 1;
+      window.history.pushState(
+        null,
+        document.title,
+        `${window.location.pathname}?filter=${this.filter}&page=${this.page}`
+      );
+    },
+
+    page() {
+      window.history.pushState(
+        null,
+        document.title,
+        `${window.location.pathname}?filter=${this.filter}&page=${this.page}`
+      );
     }
   }
 };
