@@ -10,8 +10,8 @@
             >
             <div class="mt-1 relative rounded-md shadow-md">
               <input
-                v-model="ticker"
-                @keydown.enter="add"
+                v-model.trim="ticker"
+                @keydown.enter="() => add(ticker)"
                 type="text"
                 name="wallet"
                 id="wallet"
@@ -19,10 +19,22 @@
                 placeholder="Например DOGE"
               />
             </div>
+            <div>
+              <div>
+                <span
+                  class="mx-2 my-2 inline-block cursor-pointer bg-gray-600 hover:bg-gray-700 text-white px-2 py-1 rounded-full"
+                  :key="coin"
+                  v-for="coin in similarCoins"
+                  @click="() => add(coin)"
+                >
+                  {{ coin }}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
         <button
-          @click="add"
+          @click="() => add(ticker)"
           type="button"
           class="my-4 inline-flex items-center py-2 px-4 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
         >
@@ -160,11 +172,14 @@ export default {
       graph: [],
       page: 1,
       filter: "",
-      hasNextPage: ""
+      hasNextPage: "",
+      allCoinsName: "",
+      similarCoins: []
     };
   },
 
   created() {
+    this.getAllCoinsName();
     const windowData = Object.fromEntries(
       new URL(window.location).searchParams.entries()
     );
@@ -199,6 +214,31 @@ export default {
       return filteredTickers.slice(start, end);
     },
 
+    async getAllCoinsName() {
+      const r = await fetch(
+        "https://min-api.cryptocompare.com/data/all/coinlist?summary=true"
+      );
+      const data = await r.json();
+      this.allCoinsName = Object.keys(data.Data);
+    },
+
+    getSimilarCoins() {
+      if (this.ticker !== "") {
+        let sc = [];
+        for (let coin of this.allCoinsName) {
+          if (coin.indexOf(this.ticker) !== -1) {
+            sc.push(coin);
+          }
+          if (sc.length === 4) {
+            break;
+          }
+        }
+        this.similarCoins = sc;
+      } else {
+        this.similarCoins = [];
+      }
+    },
+
     subscribeToUpdates(tickerName) {
       setInterval(async () => {
         const f = await fetch(
@@ -217,9 +257,9 @@ export default {
       this.ticker = "";
     },
 
-    add() {
+    add(ticker) {
       const currentTicker = {
-        name: this.ticker,
+        name: ticker,
         price: "-"
       };
 
@@ -249,6 +289,10 @@ export default {
   },
 
   watch: {
+    ticker() {
+        this.getSimilarCoins();
+    },
+
     filter() {
       this.page = 1;
       window.history.pushState(
