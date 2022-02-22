@@ -213,7 +213,11 @@ export default {
 
   methods: {
     updateTicker(tickerName, price) {
-      this.tickers.find(t => t.name === tickerName).price = price;
+      let ticker = this.tickers.find(t => t.name === tickerName);
+      ticker.price = price;
+      if (ticker === this.selectedTicker) {
+        this.graph.push(price);
+      }
     },
 
     async getAllCoinsName() {
@@ -250,22 +254,6 @@ export default {
         return price;
       }
       return price > 1 ? price.toFixed(2) : price.toPrecision(2);
-    },
-
-    async updateTickers() {
-    /*  if (!this.tickers.length) {
-        return;
-      }
-
-
-
-      this.tickers.forEach(ticker => {
-        const price = exchangeData[ticker.name.toUpperCase()];
-
-        ticker.price = price ?? "-";
-      });
-
-      this.ticker = "";*/
     },
 
     add(ticker) {
