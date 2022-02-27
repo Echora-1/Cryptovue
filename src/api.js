@@ -1,5 +1,12 @@
 const API_KEY =
   "a227bc6b743a0095a1d1a891f638c1316cff14f01d93241bbdbc419150af5b8d";
+const channelPrices = new BroadcastChannel("channel");
+
+channelPrices.onmessage = function(ev) {
+  const { currency, newPrice } = ev.data;
+  const handlers = tickersHandlers.get(currency) ?? [];
+  handlers.forEach(fn => fn(newPrice));
+};
 
 const tickersHandlers = new Map();
 const socket = new WebSocket(
@@ -14,6 +21,7 @@ socket.addEventListener("message", e => {
     return;
   }
 
+  channelPrices.postMessage({ currency, newPrice });
   const handlers = tickersHandlers.get(currency) ?? [];
   handlers.forEach(fn => fn(newPrice));
 });
@@ -57,5 +65,5 @@ export const subscribeToTicker = (ticker, cb) => {
 
 export const unsubscribeFromTicker = ticker => {
   tickersHandlers.delete(ticker);
-  unsubscribeFromTickerOnWs(ticker)
+  unsubscribeFromTickerOnWs(ticker);
 };

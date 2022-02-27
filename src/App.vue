@@ -164,7 +164,7 @@
 </template>
 
 <script>
-import {subscribeToTicker, unsubscribeFromTicker} from "./api";
+import { subscribeToTicker, unsubscribeFromTicker } from "./api";
 
 export default {
   name: "App",
@@ -179,7 +179,7 @@ export default {
       filter: "",
       allCoinsName: "",
       similarCoins: [],
-      recurringTicker: false
+      recurringTicker: false,
     };
   },
 
@@ -207,8 +207,6 @@ export default {
         );
       });
     }
-
-    setInterval(this.updateTickers, 5000);
   },
 
   methods: {
