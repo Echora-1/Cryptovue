@@ -1,5 +1,6 @@
 const API_KEY =
   "a227bc6b743a0095a1d1a891f638c1316cff14f01d93241bbdbc419150af5b8d";
+
 const channelPrices = new BroadcastChannel("channel");
 
 channelPrices.onmessage = function(ev) {
@@ -16,13 +17,21 @@ const socket = new WebSocket(
 const AGGREGATE_INDEX = 5;
 
 socket.addEventListener("message", e => {
-  const {TYPE: type, FROMSYMBOL: currency, PRICE: newPrice} = JSON.parse(e.data);
+  const {TYPE: type, FROMSYMBOL: currency, PRICE: newPrice, PARAMETER, MESSAGE} = JSON.parse(e.data);
+
+  if (type === "500") {
+    const invalidCurrency = PARAMETER.split("~")[2];
+    const handlers = tickersHandlers.get(invalidCurrency) ?? [];
+    channelPrices.postMessage({ invalidCurrency, MESSAGE });
+    handlers.forEach(fn => fn(MESSAGE));
+    return;
+  }
   if (type != AGGREGATE_INDEX || newPrice === undefined) {
     return;
   }
 
-  channelPrices.postMessage({ currency, newPrice });
   const handlers = tickersHandlers.get(currency) ?? [];
+  channelPrices.postMessage({ currency, newPrice });
   handlers.forEach(fn => fn(newPrice));
 });
 

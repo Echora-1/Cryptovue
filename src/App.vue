@@ -84,9 +84,10 @@
             :key="t.name"
             @click="select(t)"
             :class="{
-              'border-4': selectedTicker === t
+              'border-4': selectedTicker === t,
+              'bg-red-300': t.invalid
             }"
-            class="bg-white overflow-hidden shadow rounded-lg border-purple-800 border-solid cursor-pointer"
+            class="overflow-hidden shadow rounded-lg border-purple-800 border-solid cursor-pointer"
           >
             <div class="px-4 py-5 sm:p-6 text-center">
               <dt class="text-sm font-medium text-gray-500 truncate">
@@ -211,6 +212,15 @@ export default {
 
   methods: {
     updateTicker(tickerName, price) {
+      if (price === "INVALID_SUB") {
+        this.tickers = this.tickers.map(ticker => {
+          if (ticker.name === tickerName) {
+            ticker.invalid = true;
+          }
+          return ticker;
+        });
+        return;
+      }
       let ticker = this.tickers.find(t => t.name === tickerName);
       ticker.price = price;
       if (ticker === this.selectedTicker) {
@@ -260,7 +270,8 @@ export default {
       if (isNotRecurring) {
         const currentTicker = {
           name: ticker,
-          price: "-"
+          price: "-",
+          invalid: false
         };
 
         this.tickers = [...this.tickers, currentTicker];
@@ -364,4 +375,6 @@ export default {
 };
 </script>
 
-<style src="./app.css"></style>
+<style src="./app.css">
+
+</style>
