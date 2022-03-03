@@ -1,7 +1,7 @@
 const API_KEY =
   "a227bc6b743a0095a1d1a891f638c1316cff14f01d93241bbdbc419150af5b8d";
 const AGGREGATE_INDEX = 5;
-let BTC_PRICE;
+let BTC_PRICE = 0;
 
 const channelPrices = new BroadcastChannel("channel");
 
@@ -28,13 +28,13 @@ socket.addEventListener("message", e => {
     BTC_PRICE = newPrice;
   }
 
-  if (type === "500" && toCurrencyInvalid === "USD") {
+  if (type === "500" && toCurrencyInvalid === "USD" && MESSAGE === 'INVALID_SUB') {
     const invalidCurrency = PARAMETER.split("~")[2];
     subscribeToTickerBtcOnWs(invalidCurrency);
     return;
   }
 
-  if (type === "500" && toCurrencyInvalid === "BTC") {
+  if (type === "500" && toCurrencyInvalid === "BTC" && MESSAGE === 'INVALID_SUB') {
     const invalidCurrency = PARAMETER.split("~")[2];
     const handlers = tickersHandlers.get(invalidCurrency) ?? [];
     channelPrices.postMessage({ invalidCurrency, MESSAGE });
@@ -83,6 +83,10 @@ function unsubscribeFromTickerOnWs(ticker) {
     action: "SubRemove",
     subs: [`5~CCCAGG~${ticker}~USD`]
   });
+  sendToWebsocket({
+    action: "SubRemove",
+    subs: [`5~CCCAGG~${ticker}~BTC`]
+  });
 }
 
 function subscribeToTickerBtcOnWs(ticker) {
@@ -105,11 +109,17 @@ export const subscribeToTicker = (ticker, cb) => {
   if (ticker !== "BTC") {
     subscribeToTickerOnWs(ticker);
   }
+  if (ticker === "BTC") {
+    const handlers = tickersHandlers.get("BTC") ?? [];
+    handlers.forEach(fn => fn(BTC_PRICE));
+  }
 };
 
 export const unsubscribeFromTicker = ticker => {
   tickersHandlers.delete(ticker);
-  unsubscribeFromTickerOnWs(ticker);
+  if (ticker !== "BTC") {
+    unsubscribeFromTickerOnWs(ticker);
+  }
 };
 
 subscribeBtcToUsdOnWs();
