@@ -2,23 +2,22 @@
   <div
     @click="selectedTicker"
     :class="{
-      'border-4': isSelected,
-      'bg-red-300': isInvalid
+      'card--selected': isSelected,
+      'card--invalid': isInvalid
     }"
-    class="overflow-hidden shadow rounded-lg border-purple-800 border-solid cursor-pointer"
+    class="card"
   >
-    <div class="px-4 py-5 sm:p-6 text-center">
-      <dt class="text-sm font-medium text-gray-500 truncate">
-        {{ tickerName }} - USD
-      </dt>
-      <dd class="mt-1 text-3xl font-semibold text-gray-900">
-        {{ tickerPrice }}
-      </dd>
+    <div class="card__header">
+      <p class="card__name">{{ tickerName }}</p>
+      <delete-button @click.stop="deleteTicker" />
     </div>
-    <div class="w-full border-t border-gray-200"></div>
-    <delete-button @click.stop="deleteTicker" />
+    <span class="card__currency">$</span>
+    <p class="card__price">
+      {{ tickerPrice }}
+    </p>
   </div>
 </template>
+
 <script>
 import DeleteButton from "./DeleteButton";
 export default {
@@ -31,8 +30,8 @@ export default {
     },
 
     tickerPrice: {
-      type: Number,
-      default: 0
+      type: String,
+      default: '0'
     },
 
     isInvalid: {
@@ -57,3 +56,84 @@ export default {
   }
 };
 </script>
+
+<style scoped lang="scss">
+.card {
+  cursor: pointer;
+  overflow: hidden;
+  border: 1px solid #9381ff;
+  border-radius: 10px;
+  background: #f8f7ff;
+  padding: 14px;
+  transition: background-color 0.7s;
+
+  .card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 2px;
+    position: relative;
+    margin-bottom: 24px;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 14px;
+      height: 2px;
+      background-color: #7165be;
+    }
+  }
+
+  .card__name {
+    color: #7165be;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 23px;
+    transition: color 0.7s;
+  }
+
+  .card__currency {
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 40px;
+    color: #9381ff;
+    transition: color 0.7s;
+  }
+
+  .card__price {
+    font-weight: 500;
+    font-size: 35px;
+    line-height: 45px;
+    color: #9381ff;
+    letter-spacing: 0.04em;
+    transition: all 0.7s;
+  }
+
+  &--selected {
+    background: #9381ff;
+    -webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+      0 10px 10px rgba(0, 0, 0, 0.22);
+    -moz-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+      0 10px 10px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+
+    & .card__name {
+      color: #ffffff;
+    }
+
+    & .card__currency {
+      color: #ffffff;
+    }
+
+    & .card__price {
+      color: #ffffff;
+    }
+  }
+
+  &--invalid {
+    background: #ff000087;
+  }
+}
+</style>

@@ -3,24 +3,23 @@
     <h3 class="text-lg leading-6 font-medium text-gray-900 my-8">
       {{ tickerName }} - USD
     </h3>
-    <div
-      class="flex items-end border-gray-600 border-b border-l h-64"
+    <apexcharts
+      width="100%"
+      height="350"
+      type="area"
+      :options="chartOptions"
+      :series="series"
       ref="graph"
-    >
-      <div
-        v-for="(bar, idx) in graph"
-        :key="idx"
-        :style="{ height: `${bar}%` }"
-        class="bg-purple-800 border w-10"
-      ></div>
-    </div>
+    ></apexcharts>
     <close-button @click="close" />
   </section>
 </template>
 <script>
 import CloseButton from "./CloseButton";
+import VueApexCharts from "vue3-apexcharts";
+
 export default {
-  components: { CloseButton },
+  components: { CloseButton, apexcharts: VueApexCharts },
 
   props: {
     graph: {
@@ -35,41 +34,64 @@ export default {
     }
   },
 
+  watch: {
+    graph() {
+      this.$refs.graph.updateSeries([
+        {
+          data: this.graph
+        }
+      ]);
+    }
+  },
+
   data() {
     return {
-      maxGraphElements: 1
+      series: [
+        {
+          name: "USD",
+          data: []
+        }
+      ],
+      chartOptions: {
+        chart: {
+          type: "area",
+          height: 350,
+          toolbar: {
+            show: false
+          },
+          zoom: {
+            enabled: false
+          }
+        },
+        colors: ["#7165be", "#9381ff"],
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+          curve: "smooth"
+        },
+        xaxis: {
+          labels: {
+            show: false
+          },
+          axisBorder: {
+            show: false
+          },
+          axisTicks: {
+            show: false
+          },
+          tooltip: {
+            enabled: false
+          }
+        }
+      }
     };
   },
 
   methods: {
     close() {
       this.$emit("close-graph");
-    },
-
-    calculateMaxGraphElements() {
-      if (!this.$refs.graph) {
-        return;
-      }
-      this.maxGraphElements = this.$refs.graph.clientWidth / 39;
     }
-  },
-
-  watch: {
-    graph() {
-      while (this.graph.length > this.maxGraphElements) {
-        // eslint-disable-next-line vue/no-mutating-props
-        this.graph.shift();
-      }
-    },
-  },
-
-  mounted() {
-    this.$nextTick().then(this.calculateMaxGraphElements);
-    window.addEventListener("resize", this.calculateMaxGraphElements);
-  },
-
-  beforeUnmount() {
-    window.removeEventListener("resize", this.calculateMaxGraphElements);
   }
 };
 </script>

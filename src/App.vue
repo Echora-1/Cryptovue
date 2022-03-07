@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto flex flex-col items-center bg-gray-100 p-4">
+  <div class="container mx-auto flex flex-col items-center p-4">
     <div class="container">
       <div class="w-full my-4"></div>
       <add-ticker
@@ -23,7 +23,7 @@
         </p>
         <div>Фильтр: <input v-model="filter" /></div>
         <hr class="w-full border-t border-gray-600 my-4" />
-        <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+        <dl class="mt-5 pb-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
           <ticker-card
             v-for="t in paginatedTickers"
             :key="t.name"
@@ -66,7 +66,7 @@ export default {
       filter: "",
       allCoinsName: "",
       similarTicker: [],
-      repeatingTicker: false
+      repeatingTicker: false,
     };
   },
 
@@ -209,16 +209,7 @@ export default {
     },
 
     normalizedGraph() {
-      const maxValue = Math.max(...this.graph);
-      const minValue = Math.min(...this.graph);
-
-      if (maxValue === minValue) {
-        return this.graph.map(() => 50);
-      }
-
-      return this.graph.map(
-        price => 5 + ((price - minValue) * 95) / (maxValue - minValue)
-      );
+      return this.graph.map(price => parseInt(price));
     },
 
     pageStateOptions() {
