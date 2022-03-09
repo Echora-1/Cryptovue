@@ -9,21 +9,30 @@
         :similarTicker="similarTicker"
       />
       <template v-if="tickers.length">
-        <hr class="w-full border-t border-gray-600 my-4" />
-        <p>
-          <default-button v-if="page > 1" @click="page = page - 1">
-            Назад
-          </default-button>
-          <default-button
-            v-if="hasNextPage"
-            @click="page = Number.parseInt(page) + 1"
-          >
-            Вперёд
-          </default-button>
-        </p>
-        <div>Фильтр: <input v-model="filter" /></div>
-        <hr class="w-full border-t border-gray-600 my-4" />
-        <dl class="mt-5 pb-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
+        <hr />
+        <div class="actions">
+          <div>
+            <label for="filter" class="block text-sm font-medium text-gray-700">
+              Фильтр:
+            </label>
+            <input v-model="filter" id="filter" class="block w-full text-gray-900 focus:outline-none focus:ring-gray-500 sm:text-sm rounded-md my-1 p-1 tickers-filter" />
+          </div>
+          <div class="pagination">
+            <default-button v-if="page > 1" @click="page = page - 1">
+              Назад
+            </default-button>
+            <default-button
+              v-if="hasNextPage"
+              @click="page = Number.parseInt(page) + 1"
+            >
+              Вперёд
+            </default-button>
+          </div>
+        </div>
+        <hr />
+        <div
+          class="mt-5 pb-6 grid grid-cols-1 gap-6 sm:grid-cols-3 tickers-list"
+        >
           <ticker-card
             v-for="t in paginatedTickers"
             :key="t.name"
@@ -34,14 +43,13 @@
             :is-selected="selectedTicker === t"
             :is-invalid="t.invalid"
           />
-        </dl>
-        <hr class="w-full border-t border-gray-600 my-4" />
+        </div>
       </template>
       <ticker-graph
         v-if="selectedTicker"
         :ticker-name="selectedTicker.name"
         :graph="normalizedGraph"
-        @close-graph="this.selectedTicker = null"
+        @close-graph="selectedTicker = null"
       />
     </div>
   </div>
@@ -66,7 +74,7 @@ export default {
       filter: "",
       allCoinsName: "",
       similarTicker: [],
-      repeatingTicker: false,
+      repeatingTicker: false
     };
   },
 
@@ -250,4 +258,39 @@ export default {
 };
 </script>
 
+<style lang="scss">
+body {
+  background-color: #f8f7ff;
+}
+
+hr {
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+  width: 100%;
+  border-top-width: 1px;
+  border-color: #a5a2b8;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 50px;
+}
+
+.pagination {
+  margin: 5px 0;
+
+  & > button {
+    margin: 0 5px;
+  }
+}
+
+.tickers-filter {
+  border: 1px solid white;
+  &:focus {
+    border-color: #9381ff;
+  }
+}
+</style>
 <style src="./app.css"></style>

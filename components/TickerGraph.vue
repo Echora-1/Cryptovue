@@ -1,8 +1,6 @@
 <template>
-  <section class="relative">
-    <h3 class="text-lg leading-6 font-medium text-gray-900 my-8">
-      {{ tickerName }} - USD
-    </h3>
+  <section class="graph">
+    <h3>{{ tickerName }} - USD</h3>
     <apexcharts
       width="100%"
       height="350"
@@ -11,7 +9,7 @@
       :series="series"
       ref="graph"
     ></apexcharts>
-    <close-button @click="close" />
+    <close-button class="close-button" @click="close" />
   </section>
 </template>
 <script>
@@ -95,3 +93,24 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.graph {
+  position: relative;
+
+  h3 {
+    color: #352E5B;
+    margin: 25px 0;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 150%;
+    letter-spacing: 0.1px;
+  }
+}
+
+.close-button {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+</style>

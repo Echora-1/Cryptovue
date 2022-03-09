@@ -1,8 +1,5 @@
 <template>
-  <button
-    type="button"
-    class="my-4 inline-flex items-center py-2 px-4 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-  >
+  <button>
     <svg
       class="-ml-0.5 mr-2 h-6 w-6"
       xmlns="http://www.w3.org/2000/svg"
@@ -18,3 +15,22 @@
     Добавить
   </button>
 </template>
+
+<style lang="scss" scoped>
+button {
+  background-color: #7165be;
+  padding: 8px 16px;
+  border-radius: 20px;
+  color: white;
+  transition: background-color 0.5s;
+  display: inline-flex;
+
+  &:hover {
+    background-color: #9381ff;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+</style>

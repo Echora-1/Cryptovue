@@ -112,7 +112,8 @@ export default {
   }
 
   &--selected {
-    background: #9381ff;
+    background: linear-gradient(273.78deg, #9381FF 4.51%, #AEA0FF 99.02%);
+    border-color: #AEA0FF;
     -webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
       0 10px 10px rgba(0, 0, 0, 0.22);
     -moz-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),

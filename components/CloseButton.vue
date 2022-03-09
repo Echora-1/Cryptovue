@@ -1,8 +1,5 @@
 <template>
-  <button
-    type="button"
-    class="absolute top-0 right-0"
-  >
+  <button>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -26,3 +23,13 @@
     </svg>
   </button>
 </template>
+
+<style lang="scss" scoped>
+button {
+  &:hover {
+    path {
+      fill: #9381ff;
+    }
+  }
+}
+</style>
