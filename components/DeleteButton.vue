@@ -1,7 +1,6 @@
 <template>
   <button>
     <svg
-      class="h-5 w-5"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 20 20"
       fill="#7165BE"
@@ -22,6 +21,8 @@ button {
   background-color: #F8F7FF;
   padding: 5px;
   border: 1px solid #9381FF;
+  display: inline-flex;
+  align-items: center;
 
   &:hover svg {
     fill: #9381FF;
@@ -29,6 +30,11 @@ button {
 
   &:focus {
     outline: none;
+  }
+
+  svg {
+    width: 25px;
+    height: 25px;
   }
 }
 </style>

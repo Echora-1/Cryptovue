@@ -1,18 +1,16 @@
 <template>
   <section>
-    <div class="flex">
-      <div class="max-w-xs">
-        <label for="wallet" class="block text-sm font-medium text-gray-700"
-          >Тикер</label
-        >
-        <div class="mt-1 relative rounded-md shadow-md">
+    <div class="add-ticker">
+      <div>
+        <label for="ticker">Тикер</label>
+        <div class="add-ticker__input-wrap">
           <input
             v-model.trim="ticker"
             @keydown.enter="() => add(ticker)"
             type="text"
-            name="wallet"
-            id="wallet"
-            class="block w-full text-gray-900 focus:outline-none focus:ring-gray-500 sm:text-sm rounded-md add-input"
+            name="ticker"
+            id="ticker"
+            class="add-ticker__input"
             placeholder="Например BTC"
             @input="value => input(value)"
           />
@@ -28,13 +26,13 @@
               {{ ticker.Symbol }}
             </span>
           </div>
-          <p class="text-red-600 px-2 py-2" v-show="repeatingTicker">
+          <p class="add-ticker__error-message" v-show="repeatingTicker">
             Такой тикер уже добавлен
           </p>
         </div>
       </div>
     </div>
-    <add-button class="add-button" @click="() => add(ticker)" />
+    <add-button class="add-ticker__button" @click="() => add(ticker)" />
   </section>
 </template>
 
@@ -80,14 +78,43 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.add-button {
-  margin: 15px 0;
-}
+.add-ticker {
+  display: flex;
 
-.add-input {
-  border: 1px solid white;
-  &:focus {
-    border-color: #9381ff;
+  label {
+    font-weight: 500;
+    font-size: 0.875rem;
+    display: block;
+    color: rgba(74, 85, 104, 1);
+  }
+
+  &__input-wrap {
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -1px rgb(0 0 0 / 6%);
+    position: relative;
+    margin-top: 0.25rem;
+    border-radius: 0.375rem;
+  }
+
+  &__input {
+    border: 1px solid white;
+    font-size: 0.875rem;
+    width: 100%;
+    color: rgba(26, 32, 44, 1);
+    border-radius: 0.375rem;
+    display: block;
+
+    &:focus {
+      border-color: #9381ff;
+    }
+  }
+
+  &__error-message {
+    color: #e53e3e;
+    padding: 0.5rem;
+  }
+
+  &__button {
+    margin: 15px 0;
   }
 }
 

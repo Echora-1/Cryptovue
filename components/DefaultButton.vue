@@ -11,6 +11,8 @@ button {
   border-radius: 20px;
   color: white;
   transition: background-color 0.5s;
+  display: inline-flex;
+  align-items: center;
 
   &:hover {
     background-color: #9381ff;

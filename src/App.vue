@@ -1,7 +1,6 @@
 <template>
-  <div class="container mx-auto flex flex-col items-center p-4">
+  <div class="container cryptovue">
     <div class="container">
-      <div class="w-full my-4"></div>
       <add-ticker
         @add-ticker="value => add(value)"
         @input-ticker="value => getSimilarCoins(value)"
@@ -10,14 +9,17 @@
       />
       <template v-if="tickers.length">
         <hr />
-        <div class="actions">
-          <div>
-            <label for="filter" class="block text-sm font-medium text-gray-700">
+        <div class="cryptovue__actions">
+          <div class="cryptovue__filter">
+            <label for="filter">
               Фильтр:
             </label>
-            <input v-model="filter" id="filter" class="block w-full text-gray-900 focus:outline-none focus:ring-gray-500 sm:text-sm rounded-md my-1 p-1 tickers-filter" />
+            <input
+              v-model="filter"
+              id="filter"
+            />
           </div>
-          <div class="pagination">
+          <div class="cryptovue__pagination">
             <default-button v-if="page > 1" @click="page = page - 1">
               Назад
             </default-button>
@@ -30,9 +32,7 @@
           </div>
         </div>
         <hr />
-        <div
-          class="mt-5 pb-6 grid grid-cols-1 gap-6 sm:grid-cols-3 tickers-list"
-        >
+        <div class="cryptovue__cards">
           <ticker-card
             v-for="t in paginatedTickers"
             :key="t.name"
@@ -56,11 +56,12 @@
 </template>
 
 <script>
-import { subscribeToTicker, unsubscribeFromTicker } from "./api";
+import { subscribeToTicker, unsubscribeFromTicker, getAllTickers } from "./api";
 import AddTicker from "../components/AddTicker";
 import TickerGraph from "../components/TickerGraph";
 import TickerCard from "../components/TickerCard";
 import DefaultButton from "../components/DefaultButton";
+import { initializeApp } from "firebase/app";
 
 export default {
   name: "App",
@@ -72,14 +73,25 @@ export default {
       graph: [],
       page: 1,
       filter: "",
-      allCoinsName: "",
+      tickerNames: "",
       similarTicker: [],
       repeatingTicker: false
     };
   },
 
   created() {
-    this.getAllCoinsName();
+    const firebaseConfig = {
+      apiKey: "AIzaSyC9lu5NhkBhyNVysREs8kdylMG5eD7-vsI",
+      authDomain: "cryptovue-3c430.firebaseapp.com",
+      projectId: "cryptovue-3c430",
+      storageBucket: "cryptovue-3c430.appspot.com",
+      messagingSenderId: "63980264713",
+      appId: "1:63980264713:web:f3ccd0edd5b9782a2107d8"
+    };
+
+    initializeApp(firebaseConfig);
+
+    this.getTickerNames();
     const windowData = Object.fromEntries(
       new URL(window.location).searchParams.entries()
     );
@@ -103,7 +115,6 @@ export default {
       });
     }
   },
-
   methods: {
     updateTicker(tickerName, price) {
       if (price === "INVALID_SUB") {
@@ -123,19 +134,16 @@ export default {
       ticker.price = price;
     },
 
-    async getAllCoinsName() {
-      const r = await fetch(
-        "https://min-api.cryptocompare.com/data/all/coinlist?summary=true"
-      );
-      const data = await r.json();
-      this.allCoinsName = Object.values(data.Data);
+    async getTickerNames() {
+      const allTickers = await getAllTickers();
+      this.tickerNames = Object.values(allTickers.Data);
     },
 
     getSimilarCoins(tickerName) {
       this.repeatingTicker = false;
       if (tickerName !== "") {
         let sc = [];
-        for (let coin of this.allCoinsName) {
+        for (let coin of this.tickerNames) {
           const isSimilar =
             coin.FullName.toUpperCase().indexOf(tickerName.toUpperCase()) !==
               -1 ||
@@ -271,25 +279,84 @@ hr {
   border-color: #a5a2b8;
 }
 
-.actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 50px;
-}
+.container {
+  width: 100%;
 
-.pagination {
-  margin: 5px 0;
-
-  & > button {
-    margin: 0 5px;
+  @media (min-width: 1024px) {
+    max-width: 1024px;
+  }
+  @media (min-width: 768px) {
+    max-width: 768px;
+  }
+  @media (min-width: 640px) {
+    max-width: 640px;
   }
 }
 
-.tickers-filter {
-  border: 1px solid white;
-  &:focus {
-    border-color: #9381ff;
+.cryptovue {
+  padding: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  align-items: center;
+  flex-direction: column;
+  display: flex;
+
+  &__actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 50px;
+  }
+
+  &__filter {
+    label {
+      font-weight: 500;
+      font-size: 0.875rem;
+      display: block;
+      color: rgba(74, 85, 104, 1);
+    }
+
+    input {
+      border: 1px solid white;
+      font-size: 0.875rem;
+      width: 100%;
+      color: #1a202c;
+      padding: 0.25rem;
+      margin-top: 0.25rem;
+      margin-bottom: 0.25rem;
+      display: block;
+      border-radius: 0.375rem;
+
+      &:focus {
+        border-color: #9381ff;
+      }
+
+      &:focus-visible {
+        outline: none;
+      }
+    }
+  }
+
+  &__pagination {
+    margin: 5px 0;
+
+    & > button {
+      margin: 0 5px;
+    }
+  }
+
+  &__cards {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    grid-gap: 1.5rem;
+    gap: 1.5rem;
+    padding-bottom: 1.5rem;
+    margin-top: 1.25rem;
+
+    @media (min-width: 640px) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
   }
 }
 </style>
