@@ -2,19 +2,13 @@
   <section>
     <div class="add-ticker">
       <div>
-        <label for="ticker">Тикер</label>
-        <div class="add-ticker__input-wrap">
-          <input
-            v-model.trim="ticker"
-            @keydown.enter="() => add(ticker)"
-            type="text"
-            name="ticker"
-            id="ticker"
-            class="add-ticker__input"
-            placeholder="Например BTC"
-            @input="value => input(value)"
-          />
-        </div>
+        <base-input
+          id="ticker"
+          placeholder="Например BTC"
+          v-model.trim="ticker"
+          @keydown.enter="() => add(ticker)"
+          label="Тикер"
+        />
         <div>
           <div class="similar-tickers">
             <span
@@ -38,8 +32,9 @@
 
 <script>
 import AddButton from "./AddButton";
+import BaseInput from "./BaseInput";
 export default {
-  components: { AddButton },
+  components: { BaseInput, AddButton },
 
   props: {
     repeatingTicker: {
@@ -58,6 +53,12 @@ export default {
     return {
       ticker: ""
     };
+  },
+
+  watch: {
+    ticker() {
+      this.input();
+    }
   },
 
   methods: {
@@ -86,26 +87,6 @@ export default {
     font-size: 0.875rem;
     display: block;
     color: rgba(74, 85, 104, 1);
-  }
-
-  &__input-wrap {
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -1px rgb(0 0 0 / 6%);
-    position: relative;
-    margin-top: 0.25rem;
-    border-radius: 0.375rem;
-  }
-
-  &__input {
-    border: 1px solid white;
-    font-size: 0.875rem;
-    width: 100%;
-    color: rgba(26, 32, 44, 1);
-    border-radius: 0.375rem;
-    display: block;
-
-    &:focus {
-      border-color: #9381ff;
-    }
   }
 
   &__error-message {

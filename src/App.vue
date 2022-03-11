@@ -10,12 +10,7 @@
       <template v-if="tickers.length">
         <hr />
         <div class="cryptovue__actions">
-          <div class="cryptovue__filter">
-            <label for="filter">
-              Фильтр:
-            </label>
-            <input v-model="filter" id="filter" />
-          </div>
+          <base-input id="filter" label="Фильтр:" v-model="filter" />
           <div class="cryptovue__pagination">
             <default-button v-if="page > 1" @click="page = page - 1">
               Назад
@@ -59,10 +54,11 @@ import TickerGraph from "../components/TickerGraph";
 import TickerCard from "../components/TickerCard";
 import DefaultButton from "../components/DefaultButton";
 import { initializeApp } from "firebase/app";
+import BaseInput from "../components/BaseInput";
 
 export default {
   name: "App",
-  components: { DefaultButton, TickerCard, TickerGraph, AddTicker },
+  components: {BaseInput, DefaultButton, TickerCard, TickerGraph, AddTicker },
   data() {
     return {
       tickers: [],
@@ -276,22 +272,6 @@ hr {
   border-color: #a5a2b8;
 }
 
-.container {
-  width: 100%;
-  @media (min-width: 640px) {
-    max-width: 640px;
-  }
-  @media (min-width: 768px) {
-    max-width: 768px;
-  }
-  @media (min-width: 1024px) {
-    max-width: 1024px;
-  }
-  @media (min-width: 1280px) {
-    max-width: 1280px;
-  }
-}
-
 .cryptovue {
   padding: 1rem;
   margin-left: auto;
@@ -306,35 +286,6 @@ hr {
     justify-content: space-between;
     align-items: center;
     min-height: 50px;
-  }
-
-  &__filter {
-    label {
-      font-weight: 500;
-      font-size: 0.875rem;
-      display: block;
-      color: rgba(74, 85, 104, 1);
-    }
-
-    input {
-      border: 1px solid white;
-      font-size: 0.875rem;
-      width: 100%;
-      color: #1a202c;
-      padding: 0.25rem;
-      margin-top: 0.25rem;
-      margin-bottom: 0.25rem;
-      display: block;
-      border-radius: 0.375rem;
-
-      &:focus {
-        border-color: #9381ff;
-      }
-
-      &:focus-visible {
-        outline: none;
-      }
-    }
   }
 
   &__pagination {
