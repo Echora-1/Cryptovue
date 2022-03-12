@@ -9,7 +9,7 @@
   >
     <div class="card__header">
       <p class="card__name">{{ tickerName }}</p>
-      <delete-button @click.stop="deleteTicker" />
+      <delete-button class="card__delete-button" @click.stop="deleteTicker" />
     </div>
     <span class="card__currency">$</span>
     <p class="card__price">
@@ -92,6 +92,9 @@ export default {
     font-size: 18px;
     line-height: 23px;
     transition: color 0.7s;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   .card__currency {
@@ -135,6 +138,17 @@ export default {
 
   &--invalid {
     background: #ff000087;
+    position: relative;
+
+    &::after {
+      content: "404";
+      font-size: 60px;
+      color: #B63030FF;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
   }
 }
 </style>

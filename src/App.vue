@@ -30,7 +30,7 @@
             :key="t.name"
             @selected-ticker="select(t)"
             @delete-ticker="handleDelete(t)"
-            :ticker-name="t.name"
+            :ticker-name="getFullNameTicker(t.name)"
             :ticker-price="formatPrice(t.price)"
             :is-selected="selectedTicker === t"
             :is-invalid="t.invalid"
@@ -39,7 +39,7 @@
       </template>
       <ticker-graph
         v-if="selectedTicker"
-        :ticker-name="selectedTicker.name"
+        :ticker-name="getFullNameTicker(selectedTicker.name)"
         :graph="normalizedGraph"
         @close-graph="selectedTicker = null"
       />
@@ -66,7 +66,7 @@ export default {
       graph: [],
       page: 1,
       filter: "",
-      tickerNames: "",
+      tickerNames: [],
       similarTicker: [],
       repeatingTicker: false
     };
@@ -162,6 +162,10 @@ export default {
     },
 
     add(ticker) {
+      if (ticker === "") {
+        return;
+      }
+
       const currentTicker = {
         name: ticker,
         price: "-",
@@ -193,6 +197,17 @@ export default {
         this.selectedTicker = null;
       }
       unsubscribeFromTicker(tickerToRemove.name);
+    },
+
+    getFullNameTicker(tickerName) {
+      let fullName = this.tickerNames.find(
+        ticker => ticker.Symbol === tickerName
+      );
+      if (fullName) {
+        return fullName.FullName.split(" ")[0]
+      } else {
+        return tickerName;
+      }
     }
   },
 

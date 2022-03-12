@@ -66,13 +66,13 @@ export default {
 
 <style scoped lang="scss">
 .base-input-wrapper {
-  border: 2px solid rgba(176, 182, 190, 0.81);
+  border: 2px solid #a69ed6;
   border-radius: 4px;
   width: 100%;
   margin-top: 8px;
 
   &--focused {
-    border-color: #9381ff;
+    border-color: #7165be;
   }
 }
 
@@ -84,11 +84,15 @@ export default {
   outline: none;
   padding: 3px 6px;
   background: transparent;
+
+  &::placeholder {
+    color: rgba(74, 85, 104, 1);
+  }
 }
 
 .base-label {
   font-size: 18px;
   font-weight: 500;
-  color: rgba(74, 85, 104, 1);
+  color: #352E5B;
 }
 </style>
