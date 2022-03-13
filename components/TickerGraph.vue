@@ -32,16 +32,6 @@ export default {
     }
   },
 
-  watch: {
-    graph() {
-      this.$refs.graph.updateSeries([
-        {
-          data: this.graph
-        }
-      ]);
-    }
-  },
-
   data() {
     return {
       series: [
@@ -62,11 +52,15 @@ export default {
           }
         },
         colors: ["#7165be", "#9381ff"],
-        dataLabels: {
-          enabled: false
+        markers: {
+          size: 0,
+          style: "hollow"
         },
         stroke: {
           curve: "smooth"
+        },
+        dataLabels: {
+          enabled: false
         },
         xaxis: {
           labels: {
@@ -81,7 +75,7 @@ export default {
           tooltip: {
             enabled: false
           }
-        }
+        },
       }
     };
   },
@@ -90,7 +84,18 @@ export default {
     close() {
       this.$emit("close-graph");
     }
-  }
+  },
+
+  watch: {
+    graph() {
+      this.series = [
+        {
+          name: "USD",
+          data: this.graph
+        }
+      ];
+    }
+  },
 };
 </script>
 

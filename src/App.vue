@@ -30,7 +30,7 @@
             :key="t.name"
             @selected-ticker="select(t)"
             @delete-ticker="handleDelete(t)"
-            :ticker-name="getFullNameTicker(t.name)"
+            :ticker-name="t.fullName"
             :ticker-price="formatPrice(t.price)"
             :is-selected="selectedTicker === t"
             :is-invalid="t.invalid"
@@ -39,7 +39,7 @@
       </template>
       <ticker-graph
         v-if="selectedTicker"
-        :ticker-name="getFullNameTicker(selectedTicker.name)"
+        :ticker-name="selectedTicker.fullName"
         :graph="normalizedGraph"
         @close-graph="selectedTicker = null"
       />
@@ -58,7 +58,7 @@ import BaseInput from "../components/BaseInput";
 
 export default {
   name: "App",
-  components: {BaseInput, DefaultButton, TickerCard, TickerGraph, AddTicker },
+  components: { BaseInput, DefaultButton, TickerCard, TickerGraph, AddTicker },
   data() {
     return {
       tickers: [],
@@ -161,13 +161,32 @@ export default {
       return price > 1 ? price.toFixed(2) : price.toPrecision(2);
     },
 
-    add(ticker) {
+    add(tickerName) {
+      let ticker = tickerName;
+
       if (ticker === "") {
         return;
       }
 
+      let isTickerFullName = this.tickerNames.find(
+        t => t.FullName.split(" (")[0].toUpperCase() === ticker.toUpperCase()
+      );
+
+      let isTickerSymbol = this.tickerNames.find(
+        t => t.Symbol.toUpperCase() === ticker.toUpperCase()
+      );
+
+      if (isTickerFullName !== undefined) {
+        ticker = isTickerFullName.Symbol;
+      }
+
+      if (isTickerSymbol !== undefined) {
+        ticker = isTickerSymbol.Symbol;
+      }
+
       const currentTicker = {
         name: ticker,
+        fullName: this.getFullNameTicker(ticker),
         price: "-",
         invalid: false
       };
@@ -204,7 +223,7 @@ export default {
         ticker => ticker.Symbol === tickerName
       );
       if (fullName) {
-        return fullName.FullName.split(" ")[0]
+        return fullName.FullName.split(" (")[0];
       } else {
         return tickerName;
       }
@@ -221,7 +240,12 @@ export default {
     },
 
     filteredTickers() {
-      return this.tickers.filter(ticker => ticker.name.includes(this.filter));
+      return this.tickers.filter(ticker => {
+        return (
+          ticker.name.toUpperCase().includes(this.filter.toUpperCase()) ||
+          ticker.fullName.toUpperCase().includes(this.filter.toUpperCase())
+        );
+      });
     },
 
     paginatedTickers() {
@@ -233,7 +257,9 @@ export default {
     },
 
     normalizedGraph() {
-      return this.graph.map(price => parseInt(price));
+      return this.graph.map(price => {
+        return parseInt(price);
+      });
     },
 
     pageStateOptions() {
