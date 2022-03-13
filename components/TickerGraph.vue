@@ -63,6 +63,7 @@ export default {
           enabled: false
         },
         xaxis: {
+          type: "datetime",
           labels: {
             show: false
           },
@@ -76,6 +77,26 @@ export default {
             enabled: false
           }
         },
+        tooltip: {
+          x: {
+            formatter: seriesName => {
+              const date = new Date(seriesName);
+              const hour =
+                date.getHours().toString().length < 2
+                  ? "0" + date.getHours()
+                  : date.getHours();
+              const min =
+                date.getMinutes().toString().length < 2
+                  ? "0" + date.getMinutes()
+                  : date.getMinutes();
+              const sec =
+                date.getSeconds().toString().length < 2
+                  ? "0" + date.getSeconds()
+                  : date.getSeconds();
+              return `${hour}:${min}:${sec}`;
+            }
+          }
+        }
       }
     };
   },
@@ -95,7 +116,7 @@ export default {
         }
       ];
     }
-  },
+  }
 };
 </script>
 
@@ -104,7 +125,7 @@ export default {
   position: relative;
 
   h3 {
-    color: #352E5B;
+    color: #352e5b;
     margin: 25px 0;
     font-weight: bold;
     font-size: 20px;

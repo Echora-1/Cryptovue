@@ -40,7 +40,7 @@
       <ticker-graph
         v-if="selectedTicker"
         :ticker-name="selectedTicker.fullName"
-        :graph="normalizedGraph"
+        :graph="graph"
         @close-graph="selectedTicker = null"
       />
     </div>
@@ -122,7 +122,7 @@ export default {
       let ticker = this.tickers.find(t => t.name === tickerName);
 
       if (ticker === this.selectedTicker) {
-        this.graph.push(price);
+        this.graph = [...this.graph, [new Date(), price]];
       }
       ticker.price = price;
     },
@@ -158,7 +158,10 @@ export default {
       if (price === "-") {
         return price;
       }
-      return price > 1 ? price.toFixed(2) : price.toPrecision(2);
+
+      return price.toString().split(".")[0].length > 3
+        ? price.toString().split(".")[0]
+        : price.toFixed(2);
     },
 
     add(tickerName) {
@@ -254,12 +257,6 @@ export default {
 
     hasNextPage() {
       return this.filteredTickers.length > this.endIndex;
-    },
-
-    normalizedGraph() {
-      return this.graph.map(price => {
-        return parseInt(price);
-      });
     },
 
     pageStateOptions() {
