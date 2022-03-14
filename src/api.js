@@ -1,7 +1,7 @@
 const API_KEY =
   "a227bc6b743a0095a1d1a891f638c1316cff14f01d93241bbdbc419150af5b8d";
 const AGGREGATE_INDEX = 5;
-let BTC_PRICE = 0;
+let BTC_PRICE = "-";
 
 const channelPrices = new BroadcastChannel("channel");
 
@@ -18,7 +18,14 @@ const socket = new WebSocket(
 );
 
 socket.addEventListener("message", e => {
-  let {TYPE: type, FROMSYMBOL: currency, TOSYMBOL: toCurrency, PRICE: newPrice, PARAMETER, MESSAGE} = JSON.parse(e.data);
+  let {
+    TYPE: type,
+    FROMSYMBOL: currency,
+    TOSYMBOL: toCurrency,
+    PRICE: newPrice,
+    PARAMETER,
+    MESSAGE
+  } = JSON.parse(e.data);
   let toCurrencyInvalid;
   if (PARAMETER) {
     toCurrencyInvalid = PARAMETER.split("~")[3] ?? "";
@@ -28,13 +35,21 @@ socket.addEventListener("message", e => {
     BTC_PRICE = newPrice;
   }
 
-  if (type === "500" && toCurrencyInvalid === "USD" && MESSAGE === 'INVALID_SUB') {
+  if (
+    type === "500" &&
+    toCurrencyInvalid === "USD" &&
+    MESSAGE === "INVALID_SUB"
+  ) {
     const invalidCurrency = PARAMETER.split("~")[2];
     subscribeToTickerBtcOnWs(invalidCurrency);
     return;
   }
 
-  if (type === "500" && toCurrencyInvalid === "BTC" && MESSAGE === 'INVALID_SUB') {
+  if (
+    type === "500" &&
+    toCurrencyInvalid === "BTC" &&
+    MESSAGE === "INVALID_SUB"
+  ) {
     const invalidCurrency = PARAMETER.split("~")[2];
     const handlers = tickersHandlers.get(invalidCurrency) ?? [];
     channelPrices.postMessage({ invalidCurrency, MESSAGE });

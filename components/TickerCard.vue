@@ -30,8 +30,7 @@ export default {
     },
 
     tickerPrice: {
-      type: String,
-      default: '0'
+      default: "0"
     },
 
     isInvalid: {
@@ -115,8 +114,8 @@ export default {
   }
 
   &--selected {
-    background: linear-gradient(273.78deg, #9381FF 4.51%, #AEA0FF 99.02%);
-    border-color: #AEA0FF;
+    background: linear-gradient(273.78deg, #9381ff 4.51%, #aea0ff 99.02%);
+    border-color: #aea0ff;
     -webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
       0 10px 10px rgba(0, 0, 0, 0.22);
     -moz-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
@@ -143,7 +142,7 @@ export default {
     &::after {
       content: "404";
       font-size: 60px;
-      color: #B63030FF;
+      color: #b63030ff;
       position: absolute;
       top: 50%;
       left: 50%;
