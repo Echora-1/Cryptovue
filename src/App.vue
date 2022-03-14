@@ -122,7 +122,7 @@ export default {
       let ticker = this.tickers.find(t => t.name === tickerName);
 
       if (ticker === this.selectedTicker) {
-        this.graph = [...this.graph, [new Date(), price]];
+        this.graph = [...this.graph, [new Date(), this.formatPrice(price)]];
       }
       ticker.price = price;
     },

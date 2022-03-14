@@ -111,7 +111,7 @@ export const subscribeToTicker = (ticker, cb) => {
   }
   if (ticker === "BTC") {
     const handlers = tickersHandlers.get("BTC") ?? [];
-    handlers.forEach(fn => fn(BTC_PRICE));
+    handlers.forEach(fn => fn(BTC_PRICE.toString().split(".")[0]));
   }
 };
 
