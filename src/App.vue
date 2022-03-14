@@ -1,49 +1,52 @@
 <template>
   <div class="container cryptovue">
-    <div class="container">
-      <add-ticker
-        @add-ticker="value => add(value)"
-        @input-ticker="value => getSimilarCoins(value)"
-        :repeatingTicker="repeatingTicker"
-        :similarTicker="similarTicker"
-      />
-      <template v-if="tickers.length">
-        <hr />
-        <div class="cryptovue__actions">
-          <base-input id="filter" label="Фильтр:" v-model="filter" />
-          <div class="cryptovue__pagination">
-            <default-button v-if="page > 1" @click="page = page - 1">
-              Назад
-            </default-button>
-            <default-button
-              v-if="hasNextPage"
-              @click="page = Number.parseInt(page) + 1"
-            >
-              Вперёд
-            </default-button>
-          </div>
+    <add-ticker
+      @add-ticker="value => add(value)"
+      @input-ticker="value => getSimilarCoins(value)"
+      :repeatingTicker="repeatingTicker"
+      :similarTicker="similarTicker"
+    />
+    <template v-if="tickers.length">
+      <hr />
+      <div class="cryptovue__actions">
+        <base-input
+          id="filter"
+          label="Фильтр:"
+          v-model="filter"
+          class="cryptovue__filter"
+        />
+        <div class="cryptovue__pagination">
+          <default-button v-if="page > 1" @click="page = page - 1">
+            Назад
+          </default-button>
+          <default-button
+            v-if="hasNextPage"
+            @click="page = Number.parseInt(page) + 1"
+          >
+            Вперёд
+          </default-button>
         </div>
-        <hr />
-        <div class="cryptovue__cards">
-          <ticker-card
-            v-for="t in paginatedTickers"
-            :key="t.name"
-            @selected-ticker="select(t)"
-            @delete-ticker="handleDelete(t)"
-            :ticker-name="t.fullName"
-            :ticker-price="formatPrice(t.price)"
-            :is-selected="selectedTicker === t"
-            :is-invalid="t.invalid"
-          />
-        </div>
-      </template>
-      <ticker-graph
-        v-if="selectedTicker"
-        :ticker-name="selectedTicker.fullName"
-        :graph="graph"
-        @close-graph="selectedTicker = null"
-      />
-    </div>
+      </div>
+      <hr />
+      <div class="cryptovue__cards">
+        <ticker-card
+          v-for="t in paginatedTickers"
+          :key="t.name"
+          @selected-ticker="select(t)"
+          @delete-ticker="handleDelete(t)"
+          :ticker-name="t.fullName"
+          :ticker-price="formatPrice(t.price)"
+          :is-selected="selectedTicker === t"
+          :is-invalid="t.invalid"
+        />
+      </div>
+    </template>
+    <ticker-graph
+      v-if="selectedTicker"
+      :ticker-name="selectedTicker.fullName"
+      :graph="graph"
+      @close-graph="selectedTicker = null"
+    />
   </div>
 </template>
 
@@ -311,26 +314,43 @@ hr {
 }
 
 .cryptovue {
-  padding: 1rem;
+  padding: 0 1rem;
   margin-left: auto;
   margin-right: auto;
   margin-top: 10px;
-  align-items: center;
-  flex-direction: column;
-  display: flex;
 
   &__actions {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     min-height: 50px;
+
+    @media (max-width: 640px) {
+      flex-direction: column;
+    }
+  }
+
+  &__filter {
+    margin-bottom: 3px;
+    max-width: 193px;
   }
 
   &__pagination {
-    margin: 5px 0;
+    margin: 0;
+    align-self: flex-end;
+
+    @media (max-width: 640px) {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 10px;
+    }
 
     & > button {
       margin: 0 5px;
+
+      @media (max-width: 640px) {
+        margin: 0;
+      }
     }
   }
 

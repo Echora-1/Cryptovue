@@ -1,32 +1,35 @@
 <template>
-  <section>
-    <div class="add-ticker">
-      <div>
-        <base-input
-          id="ticker"
-          placeholder="Например BTC"
-          v-model.trim="ticker"
-          @keydown.enter="() => add(ticker)"
-          label="Тикер"
-        />
-        <div>
-          <div class="similar-tickers">
-            <span
-              class="similar-tickers__item"
-              :key="ticker.Symbol"
-              v-for="ticker in similarTicker"
-              @click="() => add(ticker.Symbol)"
-            >
-              {{ ticker.Symbol }}
-            </span>
-          </div>
-          <p class="add-ticker__error-message" v-show="repeatingTicker">
-            Такой тикер уже добавлен
-          </p>
-        </div>
-      </div>
+  <section class="add-ticker">
+    <div class="add-ticker__main">
+      <base-input
+        id="ticker"
+        placeholder="Например BTC"
+        v-model.trim="ticker"
+        @keydown.enter="() => add(ticker)"
+        label="Тикер"
+        class="add-ticker__input"
+      />
+      <add-button class="add-ticker__button" @click="() => add(ticker)" />
     </div>
-    <add-button class="add-ticker__button" @click="() => add(ticker)" />
+    <div class="add-ticker__footer">
+      <Transition>
+        <div class="similar-tickers" v-if="similarTicker.length">
+          <span
+            class="similar-tickers__item"
+            :key="ticker.Symbol"
+            v-for="ticker in similarTicker"
+            @click="() => add(ticker.Symbol)"
+          >
+            {{ ticker.Symbol }}
+          </span>
+        </div>
+      </Transition>
+      <Transition>
+        <p class="add-ticker__error-message" v-show="repeatingTicker">
+          Такой тикер уже добавлен
+        </p>
+      </Transition>
+    </div>
   </section>
 </template>
 
@@ -80,22 +83,26 @@ export default {
 
 <style lang="scss" scoped>
 .add-ticker {
-  display: flex;
+  &__main {
+    display: flex;
+  }
 
-  label {
-    font-weight: 500;
-    font-size: 0.875rem;
-    display: block;
-    color: rgba(74, 85, 104, 1);
+  &__input {
+    max-width: 193px;
+    margin-bottom: 3px;
   }
 
   &__error-message {
     color: #e53e3e;
-    padding: 0.5rem;
+    padding: 6px;
   }
 
   &__button {
-    margin: 15px 0;
+    align-self: flex-end;
+    margin-left: 20px;
+  }
+
+  &__footer {
   }
 }
 
@@ -115,5 +122,15 @@ export default {
       background-color: #9381ff;
     }
   }
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>
