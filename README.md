@@ -8,7 +8,7 @@
 Сryptocurrency price tracking implemented by scratch on vue.js and API Cryptocompare.com.
 ```
 <p align="center">
-<img src="https://media.giphy.com/media/7Gzq3nPa8UYqfEwKqx/giphy.gif" width="80%"></p>
+<img src="https://media.giphy.com/media/6yFu3aifRjzplyYsRk/giphy.gif" width="80%"></p>
 
 ## Project setup
 ```
