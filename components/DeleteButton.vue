@@ -18,14 +18,14 @@
 <style scoped lang="scss">
 button {
   border-radius: 50px;
-  background-color: #F8F7FF;
+  background-color: #f8f7ff;
   padding: 5px;
-  border: 1px solid #9381FF;
+  border: 1px solid #9381ff;
   display: inline-flex;
   align-items: center;
 
   &:hover svg {
-    fill: #9381FF;
+    fill: #9381ff;
   }
 
   &:focus {
